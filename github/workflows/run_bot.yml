@@ -1,0 +1,29 @@
+name: Arasa News Scraper Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *' # هر ساعت یکبار اجرا می‌شود
+  workflow_dispatch:    # اجازه می‌دهد خودت دستی هم دکمه اجرا را بزنی
+  push:
+    branches: [ main ]
+
+jobs:
+  scrape_and_send:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 lxml
+
+      - name: Run Python Scraper
+        run: python bot.py
