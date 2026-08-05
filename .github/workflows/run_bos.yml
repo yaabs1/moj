@@ -1,0 +1,36 @@
+name: Arasa News Scraper Bot
+
+on:
+  schedule:
+    # هر یک ساعت یکبار اجرا می‌شود
+    - cron: '0 * * * *'
+  # اجازه می‌دهد دستی هم از داخل گیت‌هاب اجرا کنی
+  workflow_dispatch:
+  # با هر بار آپلود کد (push) اجرا می‌شود
+  push:
+    branches: [ main ]
+
+jobs:
+  scrape_and_send:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ۱. دریافت کدهای تو از مخزن گیت‌هاب
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # ۲. نصب پایتون روی سرور گیت‌هاب
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # ۳. نصب کتابخانه‌های مورد نیاز (رفع مشکل ModuleNotFoundError)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 lxml
+
+      # ۴. اجرای اسکریپت اصلی (نام فایل بر اساس لاگ تو به bot.py تغییر یافت)
+      - name: Run Python Scraper
+        run: python bos.py
